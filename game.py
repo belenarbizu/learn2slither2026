@@ -76,3 +76,18 @@ class Game:
         self.clock.tick(10)  # Control the speed of the game
 
         return True
+
+    def get_state(self):
+        x = self.head[0]
+        y = self.head[1]
+
+        # can only provide to the agent the information visible to the snake (left, right, up, down)
+        both_sides = [(0, y), (1, y), (2, y), (3, y), (4, y), (5, y), (6, y), (7, y), (8, y), (9, y)]
+        up_down = [(x, 0), (x, 1), (x, 2), (x, 3), (x, 4), (x, 5), (x, 6), (x, 7), (x, 8), (x, 9)]
+
+        # W = Wall
+        # H = Snake Head
+        # S = Snake body segment
+        # G = Green apple
+        # R = Red apple
+        # 0 = Empty space
