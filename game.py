@@ -45,8 +45,11 @@ class Game:
     def draw_board(self):
         self.screen.fill("black")
 
+        pygame.draw.rect(self.screen, "yellow", (self.head[0] * self.block_size, self.head[1] * self.block_size, self.block_size, self.block_size))
+
         for body in self.snake:
-            pygame.draw.rect(self.screen, "blue", (body[0] * self.block_size, body[1] * self.block_size, self.block_size, self.block_size))
+            if body != self.head:  # Avoid drawing the head again
+                pygame.draw.rect(self.screen, "blue", (body[0] * self.block_size, body[1] * self.block_size, self.block_size, self.block_size))
 
         for apple in self.green_apples:
             pygame.draw.rect(self.screen, "green", (apple[0] * self.block_size, apple[1] * self.block_size, self.block_size, self.block_size))
@@ -63,6 +66,10 @@ class Game:
 
         # Check if the snake's head collides with its body
         if self.head in self.snake[1:]:
+            return True
+
+        # Check if the snake's body is empty (which means the snake has no segments left)
+        if len(self.snake) == 0:
             return True
 
         return False
@@ -91,3 +98,40 @@ class Game:
         # G = Green apple
         # R = Red apple
         # 0 = Empty space
+
+        walls = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (9, 0),
+                 (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 9),
+                 (9, 1), (9, 2), (9, 3), (9, 4), (9, 5), (9, 6), (9, 7), (9, 8), (9, 9),
+                 (1, 9), (2, 9), (3, 9), (4, 9), (5, 9), (6, 9), (7, 9), (8, 9)]
+
+        state = []
+
+        for pos in both_sides:
+            if pos == self.head:
+                state.append("H")
+            elif pos in self.snake:
+                state.append("S")
+            elif pos in self.green_apples:
+                state.append("G")
+            elif pos in self.red_apple:
+                state.append("R")
+            elif pos in walls:
+                state.append("W")
+            else:
+                state.append("0")
+
+        for pos in up_down:
+            if pos == self.head:
+                state.append("H")
+            elif pos in self.snake:
+                state.append("S")
+            elif pos in self.green_apples:
+                state.append("G")
+            elif pos in self.red_apple:
+                state.append("R")
+            elif pos in walls:
+                state.append("W")
+            else:
+                state.append("0")
+
+        return state
